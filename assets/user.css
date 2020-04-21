@@ -1,0 +1,77 @@
+body,html{
+	background-image: url('img/gedung2.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+	background-attachment: fixed;
+	margin: 0;
+	padding: 0;
+}
+.box{
+	background-image: url(assets/img/kemenkeu.png);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(0, 0, 0, 0.5);
+	padding: 20px;
+	box-shadow: 0 0 10px 5px black;
+	margin: 20px;
+	max-width: 300px;
+	opacity: 0.9;
+}
+.box img{
+	height: 70px;
+	width: 70px;
+	text-align: center;
+	transform: translate(135%, -20%);
+}
+
+*{
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+.box input{
+	width: 250px;
+	height: 30px;
+	background: none;
+	color: white;
+	text-align: center;
+	letter-spacing: 3px;
+	margin-left: 2%;
+	font-size: 15px;
+}
+.box-input:hover{
+
+}
+.box img{
+	margin-bottom: 4%;
+}
+.btn{
+	background: grey;
+	color: #fff;
+	padding: 7px 20px;
+	font-size: 12px;
+	border-radius: 50px;
+	margin-top: 4%;
+	margin-left: 30%;
+	letter-spacing: 2px;
+	text-align: center;
+	border-radius: 10px;
+}
+.btn:hover{
+	background: orange;
+}
+.content button{
+	margin-left: : 7%;
+	padding: 7px 20px;
+	font-size: 12px;
+	letter-spacing: 2px;
+	background: black;
+	color: white;
+	border-radius: 20px;
+}
+.nav-link:hover{
+	background: red;
+}
