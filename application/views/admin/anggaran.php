@@ -12,11 +12,10 @@
                 <th></th>
             </tr>
             <?php
-            $no = 1;
             foreach ($user as $x) {
             ?>
                 <tr>
-                    <td><?php echo $no; ?></td>
+                    <td><?php echo ++$start; ?></td>
                     <td><?php echo $x['tanggal_anggaran']; ?></td>
                     <td><?php echo $x['jenis_anggaran']; ?></td>
                     <td>Rp. <?php echo number_format($x['jumlah']); ?></td>
@@ -27,7 +26,6 @@
                     </td>
                 </tr>
             <?php
-                $no++;
             }
             ?>
         </table>

@@ -7,6 +7,7 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->model('M_admin', 'admin');
 
         if ($this->session->userdata['status'] != "login") {
             $this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">
@@ -17,8 +18,9 @@ class Admin extends CI_Controller
 
     public function index()
     {
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata['username']])->row_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $id = $this->session->userdata['id_user'];
+        $data['user'] = $this->admin->get_user($id);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->load->view('templates/header', $data);
@@ -30,8 +32,9 @@ class Admin extends CI_Controller
 
     public function profile()
     {
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata['username']])->row_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $id = $this->session->userdata['id_user'];
+        $data['user'] = $this->admin->get_user($id);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->load->view('templates/header', $data);
@@ -43,8 +46,9 @@ class Admin extends CI_Controller
 
     public function setting()
     {
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata['username']])->row_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $id = $this->session->userdata['id_user'];
+        $data['user'] = $this->admin->get_user($id);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->form_validation->set_rules('nama', 'Nama', 'required');
@@ -55,14 +59,15 @@ class Admin extends CI_Controller
             $this->load->view('admin/setting', $data);
             $this->load->view('templates/footer');
         } else {
+            $username = htmlspecialchars($this->input->post('username', true));
             $nama = htmlspecialchars($this->input->post('nama', true));
 
             $user = array(
+                'username' => $username,
                 'nama' => $nama
             );
-
-            $this->db->where('id_user', $data['user']['id_user']);
-            $this->db->update('user', $user);
+            $id = $data['user']['id_user'];
+            $this->admin->setting($id, $user);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
             Data Telah Diupdate</div>');
             redirect('admin/setting');
@@ -72,13 +77,13 @@ class Admin extends CI_Controller
     public function user()
     {
         if ($this->session->userdata['role_id'] == 1) {
-            $data['user'] = $this->db->query("SELECT * FROM user WHERE role_id > 1")->result_array();
+            $data['user'] = $this->admin->get_user_role();
         } else {
             $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
             Maaf Anda Tidak Punya Akses Untuk Masuk Ke Menu User!</div>');
             redirect('admin');
         }
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->load->view('templates/header', $data);
@@ -106,7 +111,7 @@ class Admin extends CI_Controller
                         'password' => md5($password2),
                         'image' => "default_zyuper.png"
                     );
-                    $this->db->insert('user', $tambah);
+                    $this->admin->tambah_user($tambah);
                     $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                     User Berhasil Ditambahkan</div>');
                     redirect('admin/user');
@@ -121,7 +126,7 @@ class Admin extends CI_Controller
                 redirect('admin/tambah_user');
             }
         } else {
-            $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+            $data['title'] = 'Admin | KARANG TARUNA';
             $data['url'] = current_url();
 
             $this->load->view('templates/header', $data);
@@ -135,9 +140,8 @@ class Admin extends CI_Controller
     public function hapus_user()
     {
         $id = $this->input->get('id');
+        $this->admin->hapus_user($id);
 
-        $this->db->where('id_user', $id);
-        $this->db->delete('user');
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
             User Telah Dihapus</div>');
         redirect('admin/user');
@@ -145,7 +149,7 @@ class Admin extends CI_Controller
 
     public function ubah_data_user()
     {
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
@@ -172,9 +176,7 @@ class Admin extends CI_Controller
                     'username' => $username,
                     'password' => md5($password2)
                 );
-                $this->db->where('id_user', $id);
-                $this->db->update('user', $user);
-
+                $this->admin->ubah_user($id, $user);
                 $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                     Password Berhasil Diganti</div>');
                 redirect('admin/user');
@@ -188,8 +190,9 @@ class Admin extends CI_Controller
 
     public function password()
     {
-        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata['username']])->row_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $id = $this->session->userdata['id_user'];
+        $data['user'] = $this->admin->get_user($id);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->form_validation->set_rules('passwordlama', 'Password Lama', 'trim|required');
@@ -214,8 +217,8 @@ class Admin extends CI_Controller
                     $user = array(
                         'password' => $password2
                     );
-                    $this->db->where('id_user', $data['user']['id_user']);
-                    $this->db->update('user', $user);
+                    $id = $data['user']['id_user'];
+                    $this->admin->ganti_password($id, $user);
 
                     $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                     Password Berhasil Diganti</div>');
@@ -229,7 +232,6 @@ class Admin extends CI_Controller
                 $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
                 Password Lama Salah</div>');
                 redirect('admin/password');
-                var_dump($passwordlama);
             }
         }
     }
@@ -239,7 +241,7 @@ class Admin extends CI_Controller
         $this->load->library('pagination');
 
         $total =  $this->db->count_all('aspirasi');
-        $config['base_url'] = 'http://localhost/project/admin/aspirasi';
+        $config['base_url'] = 'http://localhost/sigar/admin/aspirasi';
         $config['total_rows'] = $total;
         $config['per_page'] = 10;
         $data['start'] = $this->uri->segment(3);
@@ -273,8 +275,10 @@ class Admin extends CI_Controller
 
 
         $this->pagination->initialize($config);
-        $data['user'] = $this->db->get('aspirasi', $config['per_page'], $data['start'])->result_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $per_page = $config['per_page'];
+        $start = $data['start'];
+        $data['user'] = $this->admin->get_aspirasi($per_page, $start);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -303,7 +307,7 @@ class Admin extends CI_Controller
                 'nama' => $nama,
                 'aspirasi' => $aspirasi
             );
-            $this->db->insert('aspirasi', $tambah);
+            $this->admin->tambah_aspirasi($tambah);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                 Aspirasi Berhasil Ditambahkan</div>');
             redirect('admin/aspirasi');
@@ -312,7 +316,7 @@ class Admin extends CI_Controller
 
     public function ubah_aspirasi()
     {
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->form_validation->set_rules('nama', 'Nama', 'required');
@@ -332,8 +336,7 @@ class Admin extends CI_Controller
                 'aspirasi' => $aspirasi
             );
 
-            $this->db->where('id_aspirasi', $id);
-            $this->db->update('aspirasi', $user);
+            $this->admin->ubah_asprasi($id, $user);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                 Aspirasi Telah Diupdate</div>');
             redirect('admin/aspirasi');
@@ -343,43 +346,41 @@ class Admin extends CI_Controller
     public function hapus_aspirasi()
     {
         $id = $this->input->get('id');
-        $row = $this->db->get_where('aspirasi', ['id_aspirasi' => $id])->row_array();
 
-        $this->db->where('id_aspirasi', $id);
-        $this->db->delete('aspirasi');
+        $this->admin->hapus_aspirasi($id);
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
             Aspirasi Telah Dihapus</div>');
         redirect('admin/aspirasi');
     }
 
-    public function search_data()
-    {
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
-        $data['url'] = current_url();
+    // public function search_data()
+    // {
+    //     $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+    //     $data['url'] = current_url();
 
-        $this->form_validation->set_rules('search', 'Search', 'trim|required');
-        if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('admin/index', $data);
-            $this->load->view('templates/footer');
-        } else {
-            $search = htmlspecialchars($this->input->post('search', true));
-            $data['search'] = $this->db->get_where('data', ['id_pelanggan' => $search])->result_array();
-            if ($data['search']) {
-                $this->load->view('templates/header', $data);
-                $this->load->view('templates/sidebar', $data);
-                $this->load->view('templates/topbar', $data);
-                $this->load->view('admin/search_data', $data);
-                $this->load->view('templates/footer');
-            } else {
-                $this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">
-                Data Yang Dicari Tidak Ada</div>');
-                redirect('admin/data');
-            }
-        }
-    }
+    //     $this->form_validation->set_rules('search', 'Search', 'trim|required');
+    //     if ($this->form_validation->run() == false) {
+    //         $this->load->view('templates/header', $data);
+    //         $this->load->view('templates/sidebar', $data);
+    //         $this->load->view('templates/topbar', $data);
+    //         $this->load->view('admin/index', $data);
+    //         $this->load->view('templates/footer');
+    //     } else {
+    //         $search = htmlspecialchars($this->input->post('search', true));
+    //         $data['search'] = $this->db->get_where('data', ['id_pelanggan' => $search])->result_array();
+    //         if ($data['search']) {
+    //             $this->load->view('templates/header', $data);
+    //             $this->load->view('templates/sidebar', $data);
+    //             $this->load->view('templates/topbar', $data);
+    //             $this->load->view('admin/search_data', $data);
+    //             $this->load->view('templates/footer');
+    //         } else {
+    //             $this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">
+    //             Data Yang Dicari Tidak Ada</div>');
+    //             redirect('admin/data');
+    //         }
+    //     }
+    // }
 
     public function anggaran()
     {
@@ -391,7 +392,7 @@ class Admin extends CI_Controller
         $this->load->library('pagination');
 
         $total =  $this->db->count_all('anggaran');
-        $config['base_url'] = 'http://localhost/project/admin/anggaran';
+        $config['base_url'] = 'http://localhost/sigar/admin/anggaran';
         $config['total_rows'] = $total;
         $config['per_page'] = 10;
         $data['start'] = $this->uri->segment(3);
@@ -425,8 +426,10 @@ class Admin extends CI_Controller
 
 
         $this->pagination->initialize($config);
-        $data['user'] = $this->db->get('anggaran', $config['per_page'], $data['start'])->result_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $per_page = $config['per_page'];
+        $start = $data['start'];
+        $data['user'] = $this->admin->get_anggaran($per_page, $start);
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -483,8 +486,7 @@ class Admin extends CI_Controller
                 'jumlah' => $jumlah,
                 'keterangan' => $keterangan
             );
-            $this->db->where('id_anggaran', $id);
-            $this->db->update('anggaran', $update);
+            $this->admin->ubah_anggaran($id, $update);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
                 Anggaran Berhasil Diubah</div>');
             redirect('admin/anggaran');
@@ -499,8 +501,8 @@ class Admin extends CI_Controller
 
     public function lihat_anggaran()
     {
-        $data['user'] = $this->db->query("SELECT * FROM anggaran ORDER BY tanggal_anggaran ASC")->result_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['user'] = $this->admin->lihat_anggaran();
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
 
         $this->load->view('templates/header', $data);
@@ -522,24 +524,17 @@ class Admin extends CI_Controller
         redirect('admin/anggaran');
     }
 
-    public function cetak()
-    {
-        $data['user'] = $this->db->get('data')->result();
-
-        $this->load->view('admin/cetak', $data);
-    }
-
     public function jadwal()
     {
         if ($this->session->userdata['role_id'] != 1 && $this->session->userdata['role_id'] != 2) {
             $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
-            Maaf Anda Tidak Punya Akses Untuk Masuk Ke Menu Anggaran!</div>');
+            Maaf Anda Tidak Punya Akses Untuk Masuk Ke Menu Jadwal!</div>');
             redirect('admin');
         }
         $this->load->library('pagination');
 
-        $total =  $this->db->count_all('anggaran');
-        $config['base_url'] = 'http://localhost/project/admin/jadwal';
+        $total =  $this->db->count_all('jadwal');
+        $config['base_url'] = 'http://localhost/sigar/admin/jadwal';
         $config['total_rows'] = $total;
         $config['per_page'] = 10;
         $data['start'] = $this->uri->segment(3);
@@ -574,7 +569,7 @@ class Admin extends CI_Controller
 
         $this->pagination->initialize($config);
         $data['user'] = $this->db->get('jadwal', $config['per_page'], $data['start'])->result_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -658,7 +653,7 @@ class Admin extends CI_Controller
         $this->load->library('pagination');
 
         $total =  $this->db->count_all('forum');
-        $config['base_url'] = 'http://localhost/project/admin/forum';
+        $config['base_url'] = 'http://localhost/sigar/admin/forum';
         $config['total_rows'] = $total;
         $config['per_page'] = 10;
         $data['start'] = $this->uri->segment(3);
@@ -693,7 +688,7 @@ class Admin extends CI_Controller
 
         $this->pagination->initialize($config);
         $data['user'] = $this->db->get('forum', $config['per_page'], $data['start'])->result_array();
-        $data['title'] = 'Admin | PLN RUNGKUT SURABAYA';
+        $data['title'] = 'Admin | KARANG TARUNA';
         $data['url'] = current_url();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title><?php echo $pengaturan->nama ?> - <?php echo $pengaturan->deskripsi ?></title>
@@ -8,7 +9,9 @@
   <meta content="<?php echo $meta_description ?>" name="description">
 
   <!-- Favicons -->
-  <link href="<?php echo base_url().'/gambar/website/'.$pengaturan->logo; ?>" rel="icon">
+
+  <link rel="shortcut icon" href="<?= base_url('assets/img/katar.jpg') ?>">
+  <link href="<?php echo base_url() . '/gambar/website/' . $pengaturan->logo; ?>" rel="icon">
   <link href="<?php echo base_url(); ?>assets_frontend/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Bootstrap CSS File -->
@@ -38,12 +41,9 @@
   <nav class="navbar navbar-b navbar-trans navbar-expand-md fixed-top" id="mainNav">
     <div class="container">
 
-      <img src="<?php echo base_url().'/gambar/website/'.$pengaturan->logo; ?>" width="30px" class="mr-2">
+      <a class="navbar-brand js-scroll" href="<?= base_url() ?>"><img src="<?= base_url() . 'assets/img/katar.jpg' ?>" width="60px" class="mr-2"></a>
 
-      <a class="navbar-brand js-scroll" href="#page-top"><?php echo $pengaturan->nama ?> </a>
-
-      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
-        aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span></span>
         <span></span>
         <span></span>
@@ -54,16 +54,9 @@
             <a class="nav-link js-scroll" href="<?php echo base_url(); ?>">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll" href="<?php echo base_url('page/tentang'); ?>">Tentang</a>
+            <a class="nav-link js-scroll" href="<?php echo base_url('user/kontak'); ?>">Kontak</a>
           </li>
-         
-          <li class="nav-item">
-            <a class="nav-link js-scroll" href="<?php echo base_url('page/kontak-kami'); ?>">Kontak</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll" href="<?php echo base_url('blog'); ?>">Blog</a>
-          </li>
-        
+
         </ul>
       </div>
     </div>

@@ -142,6 +142,68 @@ class User extends CI_Controller
         }
     }
 
+    public function tambah_forum()
+    {
+        if ($this->input->post()) {
+            $nama = $this->input->post('nama');
+            $pertanyaan = $this->input->post('pertanyaan');
+            $date = $this->input->post('tanggal');
+
+            $tambah = array(
+                'nama' => $nama,
+                'pertanyaan' => $pertanyaan,
+                'tanggal' => $date
+            );
+            $this->db->insert('forum', $tambah);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                Pertanyaan Berhasil Dikirim ke Forum</div>');
+            redirect('user/tambah_forum');
+        } else {
+            $data['pengaturan'] = $this->m_data->get_data('pengaturan')->row();
+
+            // SEO META
+            $data['meta_keyword'] = $data['pengaturan']->nama;
+            $data['meta_description'] = $data['pengaturan']->deskripsi;
+            $data['pengurus'] = $this->m_data->get_pengurus();
+
+            $this->load->view('frontend/v_header', $data);
+            $this->load->view('frontend/tambah_forum', $data);
+            $this->load->view('frontend/v_footer', $data);
+        }
+    }
+
+    public function tambah_jawaban()
+    {
+        if ($this->input->post()) {
+            $id = $this->input->post('id');
+            $nama = $this->input->post('nama');
+            $jawaban = $this->input->post('jawaban');
+            $date = $this->input->post('tanggal');
+
+            $tambah = array(
+                'id_forum' => $id,
+                'nama_balasan' => $nama,
+                'jawaban' => $jawaban,
+                'tanggal' => $date
+            );
+            $this->db->insert('balasan', $tambah);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+                Berhasil Menambahkan Jawaban</div>');
+            redirect('user');
+        } else {
+            $data['pengaturan'] = $this->m_data->get_data('pengaturan')->row();
+
+            // SEO META
+            $data['meta_keyword'] = $data['pengaturan']->nama;
+            $data['meta_description'] = $data['pengaturan']->deskripsi;
+            $data['pengurus'] = $this->m_data->get_pengurus();
+
+            $this->load->view('frontend/v_header', $data);
+            $this->load->view('frontend/tambah_jawaban', $data);
+            $this->load->view('frontend/v_footer', $data);
+        }
+    }
+
     public function jawaban()
     {
         $data['pengaturan'] = $this->m_data->get_data('pengaturan')->row();

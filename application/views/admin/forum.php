@@ -5,17 +5,18 @@
         <table class="table table-bordered" style="text-align: center">
             <tr>
                 <th>No</th>
+                <th>Tanggal</th>
                 <th>Nama</th>
                 <th>Pertanyaan</th>
                 <th>Jawaban</th>
                 <th></th>
             </tr>
             <?php
-            $no = 1;
             foreach ($user as $x) {
             ?>
                 <tr>
-                    <td><?php echo $no; ?></td>
+                    <td><?php echo ++$start; ?></td>
+                    <td><?php echo $x['tanggal']; ?></td>
                     <td><?php echo $x['nama']; ?></td>
                     <td><?php echo $x['pertanyaan']; ?></td>
                     <td>
@@ -27,7 +28,6 @@
                     </td>
                 </tr>
             <?php
-                $no++;
             }
             ?>
         </table>

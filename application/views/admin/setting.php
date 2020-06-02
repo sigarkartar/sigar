@@ -14,7 +14,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="bmd-label-floating">Username</label>
-                                        <input type="text" readonly name="username" class="form-control" value="<?= $user['username'] ?>">
+                                        <input type="text" name="username" class="form-control" value="<?= $user['username'] ?>">
                                     </div>
                                 </div>
                             </div>

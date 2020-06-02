@@ -89,7 +89,6 @@
                                     <p>Jadwal</p>
                                 </a>
                                 </li>
-                                </li>
                                 <?php
                                 if ($url == base_url('admin/forum') || $url == base_url('admin/tambah_forum') || $url == base_url('admin/ubah_forum') || $url == base_url('admin/jawaban') || $url == base_url('admin/tambah_jawaban') || $url == base_url('admin/ubah_jawaban')) {
                                 ?>
